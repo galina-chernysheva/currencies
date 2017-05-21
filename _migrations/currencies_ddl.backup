@@ -1,0 +1,332 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.1.4
+-- Dumped by pg_dump version 9.1.4
+-- Started on 2017-05-22 00:02:40
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 162 (class 1259 OID 16396)
+-- Dependencies: 1873 5
+-- Name: currencies; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE currencies (
+    id integer NOT NULL,
+    cb_id character varying(10) NOT NULL,
+    iso_num_code smallint,
+    iso_char_code character varying(3),
+    name character varying(50),
+    en_name character varying(50),
+    rate_divergence_pct smallint DEFAULT 0 NOT NULL,
+    nominal integer NOT NULL
+);
+
+
+ALTER TABLE public.currencies OWNER TO postgres;
+
+--
+-- TOC entry 161 (class 1259 OID 16394)
+-- Dependencies: 5 162
+-- Name: currencies_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE currencies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.currencies_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 1901 (class 0 OID 0)
+-- Dependencies: 161
+-- Name: currencies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE currencies_id_seq OWNED BY currencies.id;
+
+
+--
+-- TOC entry 1902 (class 0 OID 0)
+-- Dependencies: 161
+-- Name: currencies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('currencies_id_seq', 1, true);
+
+
+--
+-- TOC entry 164 (class 1259 OID 16418)
+-- Dependencies: 1875 5
+-- Name: rates_updates; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE rates_updates (
+    id bigint NOT NULL,
+    requested_at timestamp without time zone NOT NULL,
+    rate_date date,
+    success boolean DEFAULT false NOT NULL
+);
+
+
+ALTER TABLE public.rates_updates OWNER TO postgres;
+
+--
+-- TOC entry 163 (class 1259 OID 16416)
+-- Dependencies: 5 164
+-- Name: rate_updates_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE rate_updates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.rate_updates_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 1903 (class 0 OID 0)
+-- Dependencies: 163
+-- Name: rate_updates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE rate_updates_id_seq OWNED BY rates_updates.id;
+
+
+--
+-- TOC entry 1904 (class 0 OID 0)
+-- Dependencies: 163
+-- Name: rate_updates_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('rate_updates_id_seq', 1, true);
+
+
+--
+-- TOC entry 165 (class 1259 OID 16430)
+-- Dependencies: 5
+-- Name: rates; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE rates (
+    currency_id integer NOT NULL,
+    update_id bigint NOT NULL,
+    cb_value numeric(10,4) NOT NULL,
+    value numeric(10,4) NOT NULL,
+    id bigint NOT NULL
+);
+
+
+ALTER TABLE public.rates OWNER TO postgres;
+
+--
+-- TOC entry 169 (class 1259 OID 16474)
+-- Dependencies: 5 165
+-- Name: rates_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE rates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.rates_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 1905 (class 0 OID 0)
+-- Dependencies: 169
+-- Name: rates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE rates_id_seq OWNED BY rates.id;
+
+
+--
+-- TOC entry 1906 (class 0 OID 0)
+-- Dependencies: 169
+-- Name: rates_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('rates_id_seq', 1, true);
+
+
+--
+-- TOC entry 1872 (class 2604 OID 16399)
+-- Dependencies: 161 162 162
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY currencies ALTER COLUMN id SET DEFAULT nextval('currencies_id_seq'::regclass);
+
+
+--
+-- TOC entry 1876 (class 2604 OID 16476)
+-- Dependencies: 169 165
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY rates ALTER COLUMN id SET DEFAULT nextval('rates_id_seq'::regclass);
+
+
+--
+-- TOC entry 1874 (class 2604 OID 16421)
+-- Dependencies: 163 164 164
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY rates_updates ALTER COLUMN id SET DEFAULT nextval('rate_updates_id_seq'::regclass);
+
+--
+-- TOC entry 1879 (class 2606 OID 16503)
+-- Dependencies: 162 162
+-- Name: currencies_cb_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY currencies
+    ADD CONSTRAINT currencies_cb_id_key UNIQUE (cb_id);
+
+
+--
+-- TOC entry 1881 (class 2606 OID 16406)
+-- Dependencies: 162 162
+-- Name: currencies_iso_num_code_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY currencies
+    ADD CONSTRAINT currencies_iso_num_code_key UNIQUE (iso_num_code);
+
+
+--
+-- TOC entry 1883 (class 2606 OID 16402)
+-- Dependencies: 162 162
+-- Name: currencies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY currencies
+    ADD CONSTRAINT currencies_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1885 (class 2606 OID 16426)
+-- Dependencies: 164 164
+-- Name: rate_updates_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY rates_updates
+    ADD CONSTRAINT rate_updates_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1890 (class 2606 OID 16436)
+-- Dependencies: 165 165 165
+-- Name: rates_currency_id_update_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY rates
+    ADD CONSTRAINT rates_currency_id_update_id_key UNIQUE (currency_id, update_id);
+
+
+--
+-- TOC entry 1892 (class 2606 OID 16493)
+-- Dependencies: 165 165
+-- Name: rates_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY rates
+    ADD CONSTRAINT rates_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1877 (class 1259 OID 16471)
+-- Dependencies: 162
+-- Name: currencies_cb_id_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX currencies_cb_id_idx ON currencies USING hash (cb_id);
+
+
+--
+-- TOC entry 1886 (class 1259 OID 16428)
+-- Dependencies: 164
+-- Name: rate_updates_rate_date_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX rate_updates_rate_date_idx ON rates_updates USING btree (rate_date);
+
+
+--
+-- TOC entry 1887 (class 1259 OID 16514)
+-- Dependencies: 164
+-- Name: rate_updates_requested_at_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX rate_updates_requested_at_idx ON rates_updates USING btree (requested_at);
+
+
+--
+-- TOC entry 1893 (class 1259 OID 16473)
+-- Dependencies: 165 165
+-- Name: rates_update_id_currency_id_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX rates_update_id_currency_id_idx ON rates USING btree (update_id, currency_id);
+
+
+--
+-- TOC entry 1888 (class 1259 OID 16470)
+-- Dependencies: 164
+-- Name: rates_updates_success_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX rates_updates_success_idx ON rates_updates USING hash (success);
+
+
+--
+-- TOC entry 1894 (class 2606 OID 16504)
+-- Dependencies: 165 162 1882
+-- Name: rates_currency_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY rates
+    ADD CONSTRAINT rates_currency_id_fkey FOREIGN KEY (currency_id) REFERENCES currencies(id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 1895 (class 2606 OID 16509)
+-- Dependencies: 165 164 1884
+-- Name: rates_update_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY rates
+    ADD CONSTRAINT rates_update_id_fkey FOREIGN KEY (update_id) REFERENCES rates_updates(id) ON DELETE CASCADE;
+
+
+-- Completed on 2017-05-22 00:02:41
+
+--
+-- PostgreSQL database dump complete
+--
+
