@@ -93,6 +93,7 @@ class RatesLoader
             $date = $curListAttrs['@attributes']['Date'];
 
             // check if rates for requested date not exists
+            // TODO: if rates exists check relations with all existing currencies (should missing be loaded?)
             $sameDateUpdateQuery = RatesUpdate::find()
                 ->alias('ru')
                 ->joinWith('rates r', false, 'INNER JOIN')
