@@ -15,9 +15,9 @@ class RatesController extends Controller
     public function actionIndex()
     {
         $labels = [
-            'warning' => $this->ansiFormat('Warning: ', [Console::FG_YELLOW, Console::BOLD]),
-            'error' => $this->ansiFormat('Error: ', [Console::FG_RED, Console::BOLD]),
-            'success' => $this->ansiFormat('Success: ', [Console::FG_GREEN, Console::BOLD])
+            'warning' => $this->ansiFormat('Warning: ', Console::FG_YELLOW, Console::BOLD),
+            'error' => $this->ansiFormat('Error: ', Console::FG_RED, Console::BOLD),
+            'success' => $this->ansiFormat('Success: ', Console::FG_GREEN, Console::BOLD)
         ];
 
         $log = RatesLoader::load();
