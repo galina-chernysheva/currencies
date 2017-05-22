@@ -4,6 +4,7 @@ namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
+use yii\helpers\Console;
 use common\helpers\CurrenciesLoader;
 
 class CurrenciesController extends Controller
@@ -23,7 +24,11 @@ class CurrenciesController extends Controller
 
         foreach ($log as $type => $messages) {
             if (!empty($messages)) {
-                $this->stdout($labels[$type] . $message . '\n');
+                $this->stdout("\n");
+                foreach ($messages as $message) {
+                    $this->stdout($labels[$type] . $message . "\n");
+                }
+                $this->stdout("\n");
             }
         }
 
