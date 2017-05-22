@@ -75,7 +75,7 @@ class RatesLoader
 
         try {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $host . '?date_req=12.05.2017');
+            curl_setopt($ch, CURLOPT_URL, $host);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($ch);
 
