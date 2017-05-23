@@ -14,7 +14,7 @@ use common\models\RatesUpdate;
 class RatesLoader
 {
     /**
-     * Saves rates from request to Bank for currencies in DB and date (latest or specified by GET param), logs errors.
+     * Saves rates from request to Bank for existing currencies and specified date (latest or specified by GET param), logs errors.
      * Returns log messages grouped by status.
      * @return array
      */
@@ -92,8 +92,8 @@ class RatesLoader
             $curListAttrs = (array)$xml->attributes();
             $date = $curListAttrs['@attributes']['Date'];
 
-            // check if rates for requested date not exists
-            // TODO: if rates exists check relations with all existing currencies (whether missed elements should be loaded?)
+            // check if rates for requested date do not exist
+            // TODO: if rates exist check relations with all existing currencies (whether missed elements should be loaded?)
             $sameDateUpdateQuery = RatesUpdate::find()
                 ->alias('ru')
                 ->joinWith('rates r', false, 'INNER JOIN')
